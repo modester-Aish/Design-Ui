@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impressive Bottle Loader</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: radial-gradient(circle at center, #1a2980, #26d0ce);
+      overflow: hidden;
+    }
+
+    .background-bubbles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: floatBubble linear infinite;
+    }
+
+    @keyframes floatBubble {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-20vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glow {
+      position: absolute;
+      width: 16em;
+      height: 16em;
+      background: radial-gradient(circle at center, rgba(100, 220, 255, 0.6), rgba(100, 220, 255, 0));
+      border-radius: 50%;
+      animation: pulse 4s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.4;
+      }
+    }
+
+    .wheel-and-bottle {
+      --dur: 1s;
+      position: relative;
+      width: 12em;
+      height: 12em;
+      font-size: 14px;
+      z-index: 1;
+    }
+
+    .wheel,
+    .bottle,
+    .bottle div,
+    .spoke {
+      position: absolute;
+    }
+
+    .wheel,
+    .spoke {
+      border-radius: 50%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .wheel {
+      background: radial-gradient(100% 100% at center, rgba(255,255,255,0) 47.8%, rgba(200, 230, 255, 0.8) 48%, rgba(180, 210, 255, 0.9) 49%);
+      box-shadow: 0 0 15px rgba(100, 200, 255, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.8);
+      z-index: 2;
+    }
+
+    .bottle-orbit {
+      animation: bottleOrbit var(--dur) linear infinite;
+      position: absolute;
+      width: 8em;
+      height: 8em;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .bottle {
+      position: absolute;
+      width: 2em;
+      height: 4.5em;
+      top: -2.5em;
+      left: 50%;
+      transform: translateX(-50%) translateY(-1em);
+      transform-origin: center bottom;
+      animation: bottleSpin var(--dur) linear infinite;
+      filter: drop-shadow(0 0 5px rgba(0, 200, 255, 0.7));
+    }
+
+    .bottle-body {
+      position: absolute;
+      background: linear-gradient(to right, #00c6ff, #0072ff, #00c6ff);
+      border-radius: 5px 5px 15px 15px;
+      box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+      bottom: 0;
+      height: 3em;
+      width: 2em;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .bottle-neck {
+      position: absolute;
+      background: linear-gradient(to right, #00c6ff, #0072ff, #00c6ff);
+      box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5);
+      border-radius: 3px;
+      bottom: 3em;
+      height: 1.2em;
+      width: 0.9em;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .bottle-cap {
+      position: absolute;
+      background: linear-gradient(to right, #FF512F, #DD2476, #FF512F);
+      box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.5);
+      border-radius: 3px 3px 0 0;
+      bottom: 4.2em;
+      height: 0.4em;
+      width: 1.1em;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .liquid {
+      background: linear-gradient(to bottom, #7F00FF, #E100FF);
+      border-radius: 0 0 15px 15px;
+      bottom: 0;
+      height: 1.8em;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .liquid::before {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      height: 0.3em;
+      width: 150%;
+      border-radius: 50%;
+      top: 0.3em;
+      left: -25%;
+      animation: liquidWave calc(var(--dur) * 3) ease-in-out infinite;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    }
+
+    .spoke {
+      animation: spoke var(--dur) linear infinite;
+      background: radial-gradient(100% 100% at center, rgba(180, 210, 255, 0.7) 4.8%, rgba(255,255,255,0) 5%),
+          linear-gradient(rgba(255,255,255,0) 46.9%, rgba(200, 230, 255, 0.7) 47% 52.9%, rgba(255,255,255,0) 53%) 50% 50% / 99% 99% no-repeat;
+      box-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
+    }
+
+    .sparkles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background-color: white;
+      border-radius: 50%;
+      filter: blur(1px);
+      animation: twinkle linear infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0.1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .loading-text {
+      font-family: Arial, sans-serif;
+      color: white;
+      font-size: 1.5em;
+      margin-top: 2em;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+      position: relative;
+      z-index: 2;
+      opacity: 0;
+      animation: fadeIn 1s forwards 1s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Animations */
+    @keyframes bottleOrbit {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    @keyframes bottleSpin {
+      from {
+        transform: translateX(-50%) translateY(-1em) rotate(0deg);
+      }
+      to {
+        transform: translateX(-50%) translateY(-1em) rotate(-360deg);
+      }
+    }
+
+    @keyframes liquidWave {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(20%);
+      }
+    }
+
+    @keyframes spoke {
+      from {
+        transform: rotate(0);
+      }
+      to {
+        transform: rotate(-1turn);
+      }
+    }
+
+    /* Entry animation for the bottle */
+    .bottle-orbit {
+      opacity: 0;
+      animation: bottleEntry 1s forwards, bottleOrbit var(--dur) 1s infinite linear;
+    }
+
+    @keyframes bottleEntry {
+      0% {
+        transform: translate(calc(-50% + 12em), -50%) rotate(0deg);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.5;
+      }
+      100% {
+        transform: translate(-50%, -50%) rotate(0deg);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-bubbles">
+    <!-- Generated bubbles -->
+  </div>
+  
+  <div class="container">
+    <div class="glow"></div>
+    <div aria-label="Glowing bottle spinning in a luminous wheel" role="img" class="wheel-and-bottle">
+      <div class="sparkles">
+        <!-- Generated sparkles -->
+      </div>
+      <div class="wheel"></div>
+      <div class="bottle-orbit">
+        <div class="bottle">
+          <div class="bottle-cap"></div>
+          <div class="bottle-neck"></div>
+          <div class="bottle-body">
+            <div class="liquid"></div>
+          </div>
+        </div>
+      </div>
+      <div class="spoke"></div>
+    </div>
+    <div class="loading-text">Loading...</div>
+  </div>
+
+  <script>
+    // Create bubbles
+    const bubbleContainer = document.querySelector('.background-bubbles');
+    for (let i = 0; i < 30; i++) {
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      
+      // Random size
+      const size = Math.random() * 30 + 10;
+      bubble.style.width = size + 'px';
+      bubble.style.height = size + 'px';
+      
+      // Random position
+      bubble.style.left = Math.random() * 100 + '%';
+      
+      // Random animation duration and delay
+      const duration = Math.random() * 15 + 10;
+      const delay = Math.random() * 10;
+      bubble.style.animation = `floatBubble ${duration}s linear infinite ${delay}s`;
+      
+      bubbleContainer.appendChild(bubble);
+    }
+
+    // Create sparkles
+    const sparkleContainer = document.querySelector('.sparkles');
+    for (let i = 0; i < 20; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.classList.add('sparkle');
+      
+      // Random position
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 40 + Math.random() * 40;
+      const x = Math.cos(angle) * distance;
+      const y = Math.sin(angle) * distance;
+      
+      sparkle.style.left = `calc(50% + ${x}px)`;
+      sparkle.style.top = `calc(50% + ${y}px)`;
+      
+      // Random animation duration and delay
+      const duration = Math.random() * 2 + 1;
+      const delay = Math.random() * 2;
+      sparkle.style.animation = `twinkle ${duration}s linear infinite ${delay}s`;
+      
+      sparkleContainer.appendChild(sparkle);
+    }
+  </script>
+</body>
+</html>
